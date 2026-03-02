@@ -1,0 +1,257 @@
+---
+import Base from '../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+const allWork = await getCollection('work');
+const work = allWork.sort((a, b) => a.data.order - b.data.order);
+---
+
+<Base>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title animate">Product and experience<br/><em>design leader.</em></h1>
+      <p class="hero-sub animate">
+        Creating new products to protect and save lives at <a href="https://www.dedrone.com" class="text-link" target="_blank" rel="noopener">Dedrone</a>.
+      </p>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section">
+    <div class="container">
+      <hr />
+      <h2 class="section-heading eyebrow animate">About me</h2>
+      <div class="prose animate">
+        <p>
+          For twenty plus years, I have been able to use my love of technology and passion for design to investigate, innovate and deliver digital experiences. And while technology inspires me with its infinite possibilities, it is people that continue to drive me forward — with the chance to bring them closer, save them time, or maybe even enrich their lives.
+        </p>
+        <p>
+          Whether leading multidisciplinary design teams or as an individual contributor, I'm a maker at heart and love to collaborate with talented technologists and watch ideas grow.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- EXPERTISE -->
+  <section class="section">
+    <div class="container">
+      <hr />
+      <h2 class="section-heading eyebrow animate">Areas of expertise</h2>
+      <ul class="expertise-list animate">
+        <li>Experience and product design</li>
+        <li>Product management, strategy and vision</li>
+        <li>Usability research, testing and analysis</li>
+        <li>Design management and creative direction</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="section" id="work">
+    <div class="container">
+      <hr />
+      <h2 class="section-heading eyebrow animate">Recent projects</h2>
+
+      <div class="work-list">
+        {work.map((project, i) => (
+          <a
+            href={`/work/${project.slug}`}
+            class={`work-item animate`}
+            style={`transition-delay: ${i * 0.07}s`}
+          >
+            {project.data.cover && (
+              <div class="work-item-image">
+                <img src={project.data.cover} alt={project.data.title} loading="lazy" />
+              </div>
+            )}
+            <div class="work-item-body">
+              <div class="work-item-meta">
+                <span class="work-company">{project.data.company}</span>
+                <span class="work-year">{project.data.year}</span>
+              </div>
+              <h3 class="work-title">{project.data.title}</h3>
+              <p class="work-summary">{project.data.summary}</p>
+              <span class="work-link">Read case study →</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CONFIDENTIALITY NOTE -->
+  <section class="section section--note">
+    <div class="container">
+      <p class="note animate">
+        Much of my work is confidential and cannot be shared publicly, but <a href="mailto:hello@getvist.com" class="text-link">drop me a line</a> and we can talk.
+      </p>
+    </div>
+  </section>
+
+</Base>
+
+<style>
+  /* HERO */
+  .hero {
+    padding: 7rem 0 4rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    max-width: 700px;
+  }
+
+  .hero-title em {
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .hero-sub {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 500px;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 0 0 2rem;
+  }
+
+  .section-heading {
+    font-family: var(--sans);
+  }
+
+  /* PROSE */
+  .prose {
+    max-width: 640px;
+  }
+
+  .prose p {
+    color: var(--text);
+    font-size: 1rem;
+    margin-bottom: 1.2rem;
+  }
+
+  /* EXPERTISE LIST */
+  .expertise-list {
+    list-style: none;
+    max-width: 640px;
+  }
+
+  .expertise-list li {
+    font-size: 1rem;
+    color: var(--text);
+    padding: 0.7rem 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .expertise-list li:first-child {
+    border-top: 1px solid var(--border);
+  }
+
+  /* WORK LIST */
+  .work-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .work-item {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 2.5rem;
+    align-items: start;
+    padding: 2.5rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: opacity var(--transition);
+  }
+
+  .work-item:first-child { border-top: 1px solid var(--border); }
+  .work-item:hover { opacity: 0.75; }
+
+  .work-item-image {
+    aspect-ratio: 4/3;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .work-item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+  }
+
+  .work-item:hover .work-item-image img { transform: scale(1.03); }
+
+  .work-item-body {
+    padding-top: 0.25rem;
+  }
+
+  .work-item-meta {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.6rem;
+  }
+
+  .work-company {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .work-year {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .work-title {
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .work-summary {
+    font-size: 0.92rem;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+    max-width: 500px;
+  }
+
+  .work-link {
+    font-size: 0.82rem;
+    color: var(--text);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    text-decoration-color: var(--border);
+  }
+
+  .work-item:hover .work-link {
+    text-decoration-color: var(--text);
+  }
+
+  /* NOTE */
+  .section--note {
+    padding: 3rem 0;
+  }
+
+  .note {
+    font-size: 1rem;
+    color: var(--muted);
+    font-style: italic;
+    font-family: var(--serif);
+    max-width: 580px;
+  }
+
+  @media (max-width: 700px) {
+    .work-item { grid-template-columns: 1fr; gap: 1.25rem; }
+    .hero-title { font-size: 2.2rem; }
+  }
+</style>

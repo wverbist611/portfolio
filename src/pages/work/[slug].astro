@@ -1,0 +1,236 @@
+---
+import Base from '../../layouts/Base.astro';
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const work = await getCollection('work');
+  return work.map(project => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { Content } = await project.render();
+---
+
+<Base title={`${project.data.title} — ${project.data.company}`} description={project.data.summary}>
+
+  <article class="case-study">
+
+    <!-- HEADER -->
+    <header class="cs-header">
+      <div class="container">
+        <a href="/" class="cs-back">← Back</a>
+        <div class="cs-eyebrow animate">
+          <span class="eyebrow" style="margin-bottom: 0">{project.data.company}</span>
+          <span class="cs-year">{project.data.year}</span>
+        </div>
+        <h1 class="cs-title animate">{project.data.title}</h1>
+        <p class="cs-summary animate">{project.data.summary}</p>
+
+        <div class="cs-meta animate">
+          <div class="cs-meta-item">
+            <span class="cs-meta-label">Role</span>
+            <span class="cs-meta-val">{project.data.role}</span>
+          </div>
+          {project.data.tags && (
+            <div class="cs-meta-item">
+              <span class="cs-meta-label">Disciplines</span>
+              <div class="tags">
+                {project.data.tags.map(tag => <span class="tag">{tag}</span>)}
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    </header>
+
+    <!-- COVER -->
+    {project.data.cover && (
+      <div class="cs-cover animate">
+        <div class="container">
+          <img src={project.data.cover} alt={project.data.title} />
+        </div>
+      </div>
+    )}
+
+    <!-- BODY -->
+    <div class="cs-body animate">
+      <div class="container">
+        <div class="cs-content">
+          <Content />
+        </div>
+      </div>
+    </div>
+
+    <!-- CONFIDENTIALITY NOTE -->
+    <div class="cs-note animate">
+      <div class="container">
+        <hr />
+        <p class="note-text">
+          Much of this work is confidential. <a href="mailto:hello@getvist.com" class="text-link">Get in touch</a> to learn more.
+        </p>
+      </div>
+    </div>
+
+  </article>
+
+</Base>
+
+<style>
+  .case-study {
+    padding-bottom: 4rem;
+  }
+
+  /* HEADER */
+  .cs-header {
+    padding: 4rem 0 3rem;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 3rem;
+  }
+
+  .cs-back {
+    display: inline-block;
+    font-size: 0.82rem;
+    color: var(--muted);
+    margin-bottom: 2.5rem;
+    transition: color var(--transition);
+  }
+
+  .cs-back:hover { color: var(--text); }
+
+  .cs-eyebrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+  }
+
+  .cs-year {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+
+  .cs-title {
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    margin-bottom: 1.25rem;
+    max-width: 720px;
+  }
+
+  .cs-summary {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 600px;
+    line-height: 1.75;
+    margin-bottom: 2rem;
+  }
+
+  .cs-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .cs-meta-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  .cs-meta-label {
+    font-size: 0.65rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .cs-meta-val {
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  /* COVER */
+  .cs-cover {
+    margin-bottom: 4rem;
+  }
+
+  .cs-cover img {
+    width: 100%;
+    max-height: 560px;
+    object-fit: cover;
+    background: var(--surface);
+  }
+
+  /* BODY */
+  .cs-body { }
+
+  .cs-content {
+    max-width: 640px;
+  }
+
+  .cs-content :global(h2) {
+    font-family: var(--serif);
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    margin: 3rem 0 1rem;
+    font-weight: 400;
+  }
+
+  .cs-content :global(h3) {
+    font-size: 0.75rem;
+    font-family: var(--sans);
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 2.5rem 0 0.75rem;
+  }
+
+  .cs-content :global(p) {
+    font-size: 1rem;
+    line-height: 1.85;
+    color: var(--text);
+    margin-bottom: 1.4rem;
+  }
+
+  .cs-content :global(img) {
+    width: 100%;
+    margin: 2.5rem 0;
+    background: var(--surface);
+  }
+
+  .cs-content :global(ul),
+  .cs-content :global(ol) {
+    padding-left: 1.4rem;
+    margin-bottom: 1.4rem;
+  }
+
+  .cs-content :global(li) {
+    margin-bottom: 0.5rem;
+    line-height: 1.75;
+    color: var(--text);
+  }
+
+  .cs-content :global(blockquote) {
+    border-left: 2px solid var(--border);
+    padding: 0.5rem 1.5rem;
+    margin: 2rem 0;
+    font-style: italic;
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    color: var(--muted);
+  }
+
+  /* NOTE */
+  .cs-note { margin-top: 4rem; }
+
+  .note-text {
+    font-style: italic;
+    font-family: var(--serif);
+    font-size: 1rem;
+    color: var(--muted);
+  }
+</style>
